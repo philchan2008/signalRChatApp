@@ -1,11 +1,13 @@
-﻿@page
+﻿@page "{p:int?}"
 @model SignalRChatApp.Pages.HistoryModel
 @{
 }
 
-<h2>Chat History</h2>
+<h2>Chat History (Page @Model.CurrentPage of @Model.TotalPages)</h2>
+
+
 <ul>
-@foreach(var msg in Model.Messages)
+@foreach (var msg in Model.Messages)
 {
     <li>
         <strong>@msg.User</strong>: @msg.Message
@@ -13,3 +15,15 @@
     </li>
 }
 </ul>
+
+
+<nav>
+    <ul class="pagination">
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                <a class="page-link" asp-page="/History" asp-route-p="@i">@i</a>
+            </li>
+        }
+    </ul>
+</nav>
