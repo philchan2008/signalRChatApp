@@ -5,6 +5,16 @@
 
 <h2>Chat History (Page @Model.CurrentPage of @Model.TotalPages)</h2>
 
+<div class="bg-info-subtle w-75">
+    <form method="get" class="mb-3">
+    <div class="input-group">
+        <input type="text" name="SearchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Search messages or users" />
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a class="btn btn-outline-secondary" href="/History">Clear</a>
+    </div>
+    </form>
+</div>
+
 
 <ul>
 @foreach (var msg in Model.Messages)
@@ -22,7 +32,10 @@
         @for (int i = 1; i <= Model.TotalPages; i++)
         {
             <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                <a class="page-link" asp-page="/History" asp-route-p="@i">@i</a>
+                <a class="page-link"
+                    asp-page="/History"
+                    asp-route-p="@i"
+                    asp-route-SearchTerm="@Model.SearchTerm">@i</a>
             </li>
         }
     </ul>

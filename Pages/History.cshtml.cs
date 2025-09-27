@@ -15,21 +15,34 @@ namespace SignalRChatApp.Pages
         }
 
         public List<ChatMessage> Messages { get; set; } = new();
+
+        [BindProperty(SupportsGet = true)]
+        public string? SearchTerm { get; set; }
+
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
 
         public async Task OnGetAsync(int p = 1)
         {
             const int pageSize = 10;
-            int page = p;
-            CurrentPage = page;
+            CurrentPage = p;
 
-            var totalMessages = await _context.Messages.CountAsync();
+            var query = _context.Messages.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(SearchTerm))
+            {
+                query = query.Where(m =>
+                    m.User.Contains(SearchTerm) ||
+                    m.Message.Contains(SearchTerm));
+            }
+
+
+            var totalMessages = await query.CountAsync();
             TotalPages = (int)Math.Ceiling(totalMessages / (double)pageSize);
 
-            Messages = await _context.Messages
+            Messages = await query
                 .OrderByDescending(m => m.Timestamp)
-                .Skip((page - 1) * pageSize)
+                .Skip((p - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
         }
