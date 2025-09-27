@@ -1,0 +1,15 @@
+﻿@page
+@model SignalRChatApp.Pages.HistoryModel
+@{
+}
+
+<h2>Chat History</h2>
+<ul>
+@foreach(var msg in Model.Messages)
+{
+    <li>
+        <strong>@msg.User</strong>: @msg.Message
+        <em class="text-muted">(@msg.Timestamp.ToString("g"))</em>
+    </li>
+}
+</ul>
