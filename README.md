@@ -23,7 +23,7 @@ A modern, real-time chat application built with **ASP.NET Core Razor Pages** and
 
 To run this project locally, you need the following installed:
 
-* **.NET SDK** (version 7.0 or newer recommended)
+* **.NET SDK** (version 8.0 or newer recommended)
 * A code editor like **Visual Studio** or **VS Code**
 
 ### Installation and Setup
@@ -31,8 +31,8 @@ To run this project locally, you need the following installed:
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/YourUsername/YourRepoName.git](https://github.com/YourUsername/YourRepoName.git)
-    cd YourRepoName
+    git clone [https://github.com/philchan2008/SignalRChatApp.git](https://github.com/philchan2008/SignalRChatApp.git)
+    cd SignalRChatApp 
     ```
 
 2.  **Restore dependencies:**
@@ -98,5 +98,5 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 Your Name - philchan2008@gmail.com - https://linkedin.com/wt-philip-chan/
 
-Project Link: [https://github.com/philchan2008/signalRChatApp](https://github.com/philchan2008/signslRChatApp)
+Project Link: [https://github.com/philchan2008/SignalRChatApp](https://github.com/philchan2008/SignslRChatApp)
 
