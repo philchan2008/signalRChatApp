@@ -9,23 +9,50 @@
         Don't post your <b style="color: var(--bs-danger)">sensitive</b> information to the chat box.
     </div>
 
-    <div class="row text-bg-light">
-        <div class="col-4 d-flex align-items-center gap-2">
+    <div class="text-bg-light p-3">
+        <div class="align-items-center gap-2 w-50">
             <i class="bi bi-person-circle"></i>
-            <input class="form-control" id="userInput" placeholder="Your name" />
+            <input class="form-control-plaintext ms-2" id="userInput" placeholder="Your name" />
+            <button class="btn btn-primary" type="button" onclick="clearUsername()">Clear</button>
         </div>
-        <div class="col-4 d-flex align-items-center gap-2">
+        <div class="align-items-center gap-2">
             <i class="bi bi-chat-right-dots me-1"></i>
             <input class="form-control" id="messageInput" placeholder="Type a message..." />
         </div>        
-        <div class="col-2 d-flex align-items-center gap-2">
+        <div class="align-items-center gap-2">
             <button class="btn btn-outline-primary btn-sm" id="sendButton">Send</button>
         </div>
     </div>
-    <div class="row gap-1">
+    <div class="grid gap-1">
         <ul id="messagesList"></ul>
     </div>
 </div>
+<div id="usernameOverlay" class="position-fixed top-0 start-0 w-100 h-100 bg-light-subtle p-5">
+    <div class="overlay-content">
+        <h2>Enter your name to join the chat</h2>
+        <input type="text" id="usernameInput" class="form-control" placeholder="Your name" />
+        <button class="btn btn-primary mt-2" onclick="submitUsername()">Enter Chat</button>
+    </div>
+</div>
+<!-- Modals -->
+<div class="modal fade" id="nameAlertModal" tabindex="-1" aria-labelledby="nameAlertLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-light-subtle">
+      <div class="modal-header">
+        <h5 class="modal-title" id="nameAlertLabel">Missing Name</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Please enter your name before continuing.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Modals -->
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
 <script>
     const connection = new signalR.HubConnectionBuilder()
@@ -45,4 +72,65 @@
             connection.invoke("SendMessage", user, message);
         });
     });
+
+    function submitUsername() {
+        const name = document.getElementById("usernameInput").value.trim();
+        if (name) {
+            localStorage.setItem("chatUserName", name);
+            document.getElementById("usernameOverlay").style.display = "none";
+            // Optional: inject into hidden form field
+            const userField = document.getElementById("userField");
+            if (userField) userField.value = name;
+
+            const userInput = document.getElementById("userInput");
+            if (userInput) {
+                userInput.value = name;
+                userInput.readOnly = true;
+            }
+        } else {
+            const name = document.getElementById("usernameInput").value.trim();
+            if (!name) {
+                const modal = new bootstrap.Modal(document.getElementById("nameAlertModal"));
+                modal.show();
+                return;
+            }
+
+        }
+    }
+
+    function clearUsername() {
+        if (localStorage.getItem("chatUserName")) {
+            localStorage.removeItem("chatUserName");
+            document.getElementById("usernameOverlay").style.display = "flex";
+            document.getElementById("usernameInput").value = "";
+            document.getElementById("userField").value = "";
+            const userField = document.getElementById("userField");
+            if (userField) userField.value = "";
+            const userInput = document.getElementById("userInput");
+            if (userInput) {
+                userInput.value = "";
+                userInput.readOnly = false;
+            }
+        }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+        const savedName = localStorage.getItem("chatUserName");
+        if (!savedName) {
+            const userField = document.getElementById("userField");
+            userField.value = "";
+            userField.style.display = "flex";
+        } else {
+            document.getElementById("usernameOverlay").style.display = "none";
+            const userField = document.getElementById("userField");
+            if (userField) userField.value = savedName;
+            const userInput = document.getElementById("userInput");
+            if (userInput) {
+                userInput.value = savedName;
+                userInput.readOnly = true;
+            }
+            
+        }
+    });
+
 </script>
