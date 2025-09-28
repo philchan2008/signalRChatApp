@@ -31,8 +31,8 @@ To run this project locally, you need the following installed:
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/philchan2008/SignalRChatApp.git](https://github.com/philchan2008/SignalRChatApp.git)
-    cd SignalRChatApp 
+    git clone [https://github.com/philchan2008/signalRChatApp.git](https://github.com/philchan2008/signalRChatApp.git)
+    cd signalRChatApp 
     ```
 
 2.  **Restore dependencies:**
@@ -98,5 +98,5 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 Your Name - philchan2008@gmail.com - https://linkedin.com/wt-philip-chan/
 
-Project Link: [https://github.com/philchan2008/SignalRChatApp](https://github.com/philchan2008/SignslRChatApp)
+Project Link: [https://github.com/philchan2008/signalRChatApp](https://github.com/philchan2008/signslRChatApp)
 
