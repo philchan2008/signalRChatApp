@@ -23,7 +23,7 @@ A modern, real-time chat application built with **ASP.NET Core Razor Pages** and
 
 To run this project locally, you need the following installed:
 
-* **.NET SDK** (version 8.0 or newer recommended)
+* **.NET SDK** (version 9.0 is recommended)
 * A code editor like **Visual Studio** or **VS Code**
 
 ### Installation and Setup
