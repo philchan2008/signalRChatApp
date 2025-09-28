@@ -37,7 +37,7 @@ To run this project locally, you need the following installed:
 
 2.  **Restore dependencies:**
 
-## dotNet Package Installation
+*dotNet Package Installation*
 
 ```bash
 dotnet add package Microsoft.AspNetCore.SignalR
