@@ -43,6 +43,7 @@ To run this project locally, you need the following installed:
 dotnet add package Microsoft.AspNetCore.SignalR
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 dotnet add package Microsoft.EntityFrameworkCore.Design
+dotnet add package Microsoft.Extensions.Localization
 dotnet tool install --global dotnet-ef
 dotnet ef migrations add InitChatSchema
 dotnet ef database update

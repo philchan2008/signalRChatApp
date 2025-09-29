@@ -1,57 +1,114 @@
 ﻿@page
 @model IndexModel
+@using Microsoft.Extensions.Localization;
+@using System.Globalization
+@using SignalRChatApp.Helpers;
+@inject IStringLocalizer<SharedResources> Localizer
+@inject ILogger<IndexModel> Logger
+
+
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = LocalizationHelper.Get(Localizer, "Title", "SignalR Chat App", Logger);
+    ViewData["AppName"] = LocalizationHelper.Get(Localizer, "AppName", "SignalR Chat App", Logger);
 }
+
+
+<div class="position-fixed top-0 end-0 grid col-3 p-2 h-25 mb-5" style="z-index: 1050;">
+    <div class="btn-group">
+        
+        <button class="btn lang-btn @(Model.CurrentCulture == "en" ? "btn-primary" : "btn-outline-primary")"
+            onclick="changeLanguage(this, 'en')">
+            <span class="flag-icon flag-icon-gb me-2" style="width:24px; height:16px;"></span> English
+            </button>
+
+        <button class="btn lang-btn @(Model.CurrentCulture == "zh" ? "btn-primary" : "btn-outline-primary")"
+            onclick="changeLanguage(this, 'zh')">
+            <span class="flag-icon flag-icon-hk me-2" style="width:24px; height:16px;"></span>中文 (HK)
+            </button>
+    </div>
+</div>
+
+<script>
+    function changeLanguage(button, culture) {
+        // Remove btn-primary from all language buttons
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-outline-primary');
+        });
+
+        // Add btn-primary to the clicked button
+        button.classList.remove('btn-outline-primary');
+        button.classList.add('btn-primary');
+
+        // Update culture via query string
+        const url = new URL(window.location.href);
+        url.searchParams.set('culture', culture);
+        document.cookie = `.AspNetCore.Culture=c=${culture}|uic=${culture}; path=/`;
+
+        window.location.href = url.toString();
+
+    }
+</script>
+
+<!-- Username input -->
+<div id="usernameOverlay" class="position-fixed top-0 start-0 w-100 h-100 bg-light-subtle p-5">
+    <div class="overlay-content">
+        <h2>
+        @LocalizationHelper.Get(Localizer, "Enter your name to join the chat", "Enter your name to join the chat", Logger)
+        </h2>
+        <input type="text" id="usernameInput" class="form-control" placeholder="@LocalizationHelper.Get(Localizer, "Your Name", "Your Name", Logger)" />
+        <button class="btn btn-primary mt-2" onclick="submitUsername()">@LocalizationHelper.Get(Localizer, "Enter chat", "Enter chat", Logger)</button>
+    </div>
+</div>
+<!-- End of username input -->
+
+<!-- Modals -->
+<div class="modal fade" id="nameAlertModal" tabindex="-1" aria-labelledby="nameAlertLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-light-subtle">
+      <div class="modal-header">
+        <h5 class="modal-title" id="nameAlertLabel">@LocalizationHelper.Get(Localizer, "Missing Name", "Missing Name", Logger)</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        @LocalizationHelper.Get(Localizer, "Please enter your name before continuing.", "Please enter your name before continuing.", Logger)
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">@LocalizationHelper.Get(Localizer, "OK", "OK", Logger)</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Modals -->
 
 <div class="container-sm">
     <div class="text-bg-warning pt-1 py-1 px-2 pe-2 rounded-2 mb-4 d-inl">
-        Don't post your <b style="color: var(--bs-danger)">sensitive</b> information to the chat box.
+        @LocalizationHelper.Get(Localizer, "Don't post your sensitive information to the chat box.", "Don't post your sensitive information to the chat box.", Logger)
     </div>
 
-    <div class="text-bg-light p-3">
-        <div class="align-items-center gap-2 w-50">
-            <i class="bi bi-person-circle"></i>
-            <input class="form-control-plaintext ms-2" id="userInput" placeholder="Your name" />
-            <button class="btn btn-primary" type="button" onclick="clearUsername()">Clear</button>
-        </div>
-        <div class="align-items-center gap-2">
-            <i class="bi bi-chat-right-dots me-1"></i>
-            <input class="form-control" id="messageInput" placeholder="Type a message..." />
-        </div>        
-        <div class="align-items-center gap-2">
-            <button class="btn btn-outline-primary btn-sm" id="sendButton">Send</button>
+    <div class="container text-bg-light p-3">
+        <div class="row">
+            <div class="col-3 d-flex flex-nowrap align-items-center gap-2">
+                <i class="bi bi-person-circle"></i>
+                <input class="form-control-plaintext ms-2" id="userInput"/>
+                <button class="btn btn-sm btn-outline-secondary text-nowrap" type="button" onclick="clearUsername()">
+                    @LocalizationHelper.Get(Localizer, "Clear", "Clear", Logger)
+                </button>
+            </div>
+            <div class="col-6 d-flex flex-nowrap align-items-center gap-2">
+                <i class="bi bi-chat-right-dots me-1"></i>
+                <input class="form-control" id="messageInput" placeholder="@LocalizationHelper.Get(Localizer, "Type a message...", "Type a message...", Logger)" />
+            </div>        
+            <div class="col-3 d-flex flex-nowrap align-items-center gap-2">
+                <button class="btn btn-outline-primary btn-sm" id="sendButton">@LocalizationHelper.Get(Localizer, "Send", "Send", Logger)</button>
+            </div>
         </div>
     </div>
     <div class="grid gap-1">
         <ul id="messagesList"></ul>
     </div>
 </div>
-<div id="usernameOverlay" class="position-fixed top-0 start-0 w-100 h-100 bg-light-subtle p-5">
-    <div class="overlay-content">
-        <h2>Enter your name to join the chat</h2>
-        <input type="text" id="usernameInput" class="form-control" placeholder="Your name" />
-        <button class="btn btn-primary mt-2" onclick="submitUsername()">Enter Chat</button>
-    </div>
-</div>
-<!-- Modals -->
-<div class="modal fade" id="nameAlertModal" tabindex="-1" aria-labelledby="nameAlertLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content bg-light-subtle">
-      <div class="modal-header">
-        <h5 class="modal-title" id="nameAlertLabel">Missing Name</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Please enter your name before continuing.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-light" data-bs-dismiss="modal">OK</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- End of Modals -->
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
 <script>
